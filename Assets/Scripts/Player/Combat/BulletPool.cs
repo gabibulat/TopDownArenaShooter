@@ -12,7 +12,7 @@ public sealed class BulletPool : MonoBehaviour
 
 	private void Awake()
 	{
-		if (Instance != null && Instance != this)
+		if (Instance && !Equals(Instance, this))
 		{
 			Destroy(gameObject);
 			return;
@@ -20,7 +20,7 @@ public sealed class BulletPool : MonoBehaviour
 
 		Instance = this;
 
-		for (int i = 0; i < size; i++)
+		for (var i = 0; i < size; i++)
 		{
 			var bullet = Instantiate(bulletPrefab, transform);
 			bullet.gameObject.SetActive(false);

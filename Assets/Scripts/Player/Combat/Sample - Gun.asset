@@ -17,6 +17,6 @@ MonoBehaviour:
   fireRate: 8
   bulletSpeed: 25
   bulletLifeTime: 2.5
-  magazineSize: 200
-  reloadTime: 1.1
+  magazineSize: 10
+  reloadTime: 0.6
   maxReserveAmmo: 240

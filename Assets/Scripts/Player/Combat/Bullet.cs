@@ -31,7 +31,7 @@ public sealed class Bullet : MonoBehaviour
 
 	private void Update()
 	{
-		Vector3 step = _velocity * Time.deltaTime;
+		var step = _velocity * Time.deltaTime;
 
 		if (Physics.Raycast(transform.position, _velocity.normalized, out var hit, step.magnitude, hitMask, QueryTriggerInteraction.Ignore))
 		{

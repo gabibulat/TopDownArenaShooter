@@ -12,18 +12,19 @@ public class WeaponInventory : MonoBehaviour
 	private WeaponData _currentWeapon;
 	private WeaponState _currentState;
 
-	public event Action<WeaponData, WeaponState> EquippedChanged;
+	public event Action<WeaponData> EquippedChanged;
+	public event Action<int, int> AmmoChanged; 
 
 	private void Start()
 	{
 		AddWeapon(startingWeapon, startingReserveAmmo, autoEquip: true);
 	}
 
-	private bool HasWeapon(WeaponData weapon) => weapon != null && _owned.Contains(weapon);
+	private bool HasWeapon(WeaponData weapon) => weapon && _owned.Contains(weapon);
 
-	public void AddWeapon(WeaponData weapon, int reserveAmmoGain = 0, bool autoEquip = false)
+	private void AddWeapon(WeaponData weapon, int reserveAmmoGain = 0, bool autoEquip = false)
 	{
-		if (weapon == null) return;
+		if (!weapon) return;
 
 		if (!HasWeapon(weapon))
 		{
@@ -49,7 +50,7 @@ public class WeaponInventory : MonoBehaviour
 
 	private void Equip(WeaponData weapon)
 	{
-		if (weapon == null) return;
+		if (!weapon) return;
 
 		if (!HasWeapon(weapon))
 		{
@@ -58,7 +59,8 @@ public class WeaponInventory : MonoBehaviour
 
 		_currentWeapon = weapon;
 		_currentState = _states[weapon];
-		EquippedChanged?.Invoke(_currentWeapon, _currentState);
+		EquippedChanged?.Invoke(_currentWeapon);
+		AmmoChanged?.Invoke(_currentState.ammoInMag, _currentState.ammoReserve); 
 	}
 
 	public void AddAmmo(WeaponData weapon, int amount)
@@ -76,7 +78,38 @@ public class WeaponInventory : MonoBehaviour
 
 		if (weapon == _currentWeapon)
 		{
-			EquippedChanged?.Invoke(_currentWeapon, _currentState);
+			AmmoChanged?.Invoke(_currentState.ammoInMag, _currentState.ammoReserve); 
 		}
+	}
+	
+	public bool TryConsumeFromCurrent(int amount = 1)
+	{
+		if (amount <= 0) return true;
+
+		if (_currentState.ammoInMag < amount) return false;
+
+		_currentState.ammoInMag -= amount;
+		AmmoChanged?.Invoke(_currentState.ammoInMag, _currentState.ammoReserve); 
+		return true;
+	}
+
+	public void TryApplyReloadToCurrent()
+	{
+		if (_currentState.ammoInMag >= _currentWeapon.magazineSize) return;
+		if (_currentState.ammoReserve <= 0) return;
+
+		var need = _currentWeapon.magazineSize - _currentState.ammoInMag;
+		var take = Mathf.Min(need, _currentState.ammoReserve);
+
+		_currentState.ammoInMag += take;
+		_currentState.ammoReserve -= take;
+
+		AmmoChanged?.Invoke(_currentState.ammoInMag, _currentState.ammoReserve); 
+	}
+	
+	public bool CanReloadCurrent()
+	{
+		if (_currentState.ammoInMag >= _currentWeapon.magazineSize) return false;
+		return _currentState.ammoReserve > 0;
 	}
 }

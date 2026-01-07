@@ -45,34 +45,34 @@ public class PlayerController : MonoBehaviour
 
 	private void Move()
 	{
-		Vector3 move = new Vector3(_moveInput.x, 0f, _moveInput.y);
+		var move = new Vector3(_moveInput.x, 0f, _moveInput.y);
 		if (move.sqrMagnitude > 1f)
 		{
 			move.Normalize();
 		}
 
-		_controller.Move(move * moveSpeed * Time.deltaTime);
+		_controller.Move(move * (moveSpeed * Time.deltaTime));
 	}
 
 	private void Aim()
 	{
-		if (mainCamera == null) return;
+		if (!mainCamera) return;
 
-		Ray ray = mainCamera.ScreenPointToRay(_aimInput);
+		var ray = mainCamera.ScreenPointToRay(_aimInput);
 
-		Plane plane = new Plane(Vector3.up, new Vector3(0f, transform.position.y, 0f));
-		if (!plane.Raycast(ray, out float enter))
+		var plane = new Plane(Vector3.up, new Vector3(0f, transform.position.y, 0f));
+		if (!plane.Raycast(ray, out var enter))
 			return;
 
-		Vector3 aimPoint = ray.GetPoint(enter);
-		Vector3 dir = aimPoint - transform.position;
+		var aimPoint = ray.GetPoint(enter);
+		var dir = aimPoint - transform.position;
 		dir.y = 0f;
 
 		if (dir.sqrMagnitude < 0.0001f)
 			return;
 		AimDirection = dir.normalized;
 
-		Quaternion desired = Quaternion.LookRotation(AimDirection, Vector3.up);
+		var desired = Quaternion.LookRotation(AimDirection, Vector3.up);
 		transform.rotation = Quaternion.Slerp(transform.rotation, desired, rotationSpeed * Time.deltaTime);
 	}
 }
