@@ -1,11 +1,12 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class HUD : MonoBehaviour
 {
-	[SerializeField] private TMP_Text _healthText;
+	[SerializeField] private Image _healthBar;
+	[SerializeField] private Image _weaponIcon;
 	[SerializeField] private TMP_Text _ammoText;
-	[SerializeField] private TMP_Text _weaponText;
 
 	[SerializeField] private WeaponInventory _weaponInventory;
 	[SerializeField] private Health _playerHealth;
@@ -29,7 +30,7 @@ public class HUD : MonoBehaviour
 
 	private void WeaponUpdate(WeaponData weaponData)
 	{
-		_weaponText.text = $"{weaponData.weaponId}";
+		_weaponIcon.sprite = weaponData.icon;
 	}
 
 	private void AmmoUpdate(int ammoInMag, int ammoReserve)
@@ -39,6 +40,6 @@ public class HUD : MonoBehaviour
 
 	private void HealthUpdate(int current, int max)
 	{
-		_healthText.text = $"{current}/{max}";
+		_healthBar.fillAmount = Mathf.Clamp01((float)current / max);
 	}
 }

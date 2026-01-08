@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Sample - Gun
   m_EditorClassIdentifier: Assembly-CSharp::WeaponData
   weaponId: Gun
+  icon: {fileID: 21300000, guid: 734cf4f47aaa187499f71a43f51a00c6, type: 3}
   damage: 10
   fireRate: 8
   bulletSpeed: 25
