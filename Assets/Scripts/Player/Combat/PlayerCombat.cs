@@ -1,22 +1,31 @@
+using System;
 using UnityEngine;
 
 public class PlayerCombat : MonoBehaviour
 {
-	[SerializeField] private PlayerController playerController;
-	[SerializeField] private WeaponInventory inventory;
 	[SerializeField] private Transform muzzlePoint;
 
-	[SerializeField] private bool autoReloadWhenEmpty = true;
-
+	private Animator _animator;
+	private PlayerController _playerController; 
+	private WeaponInventory _inventory;
+	
 	private bool _triggerHeld;
 	private bool _isReloading;
 	private float _nextFireTime;
 	private float _reloadEndTime;
 
 	private WeaponData _weapon;
+	private static readonly int Shoot = Animator.StringToHash("Shoot");
 	
-	private void OnEnable()  => inventory.EquippedChanged += OnEquippedChanged;
-	
+	private void OnEnable()  => _inventory.EquippedChanged += OnEquippedChanged;
+
+	private void Awake()
+	{
+		_animator = GetComponent<Animator>();
+		_playerController = GetComponent<PlayerController>();
+		_inventory = GetComponent<WeaponInventory>();
+	}
+
 	private void OnEquippedChanged(WeaponData weaponData)
 	{
 		_weapon = weaponData;
@@ -33,7 +42,7 @@ public class PlayerCombat : MonoBehaviour
 		if (_isReloading)
 		{
 			if (Time.time < _reloadEndTime) return;
-			inventory.TryApplyReloadToCurrent();
+			_inventory.TryApplyReloadToCurrent();
 			_isReloading = false;
 		}
 
@@ -47,7 +56,7 @@ public class PlayerCombat : MonoBehaviour
 	{
 		if (Time.time < _nextFireTime) return;
 		
-		if (!inventory.TryConsumeFromCurrent(1))
+		if (!_inventory.TryConsumeFromCurrent(1))
 		{
 			TryReload();
 			return;
@@ -56,7 +65,7 @@ public class PlayerCombat : MonoBehaviour
 		_nextFireTime = Time.time + (1f / _weapon.fireRate);
 		FireBullet();
 		
-		if (autoReloadWhenEmpty && !inventory.TryConsumeFromCurrent(0))
+		if (!_inventory.TryConsumeFromCurrent(0))
 		{
 			TryReload();
 		}
@@ -65,7 +74,7 @@ public class PlayerCombat : MonoBehaviour
 	private void TryReload()
 	{
 		if (_isReloading) return;
-		if (!inventory.CanReloadCurrent()) return;
+		if (!_inventory.CanReloadCurrent()) return;
 
 		_isReloading = true;
 		_reloadEndTime = Time.time + _weapon.reloadTime;
@@ -73,13 +82,14 @@ public class PlayerCombat : MonoBehaviour
 
 	private void FireBullet()
 	{
-		var dir = playerController.AimDirection.sqrMagnitude > 0.0001f
-			? playerController.AimDirection
+		var dir = _playerController.AimDirection.sqrMagnitude > 0.0001f
+			? _playerController.AimDirection
 			: transform.forward;
 
 		var bullet = BulletPool.Instance.Get();
 		bullet.Launch(muzzlePoint.position, dir, _weapon.bulletSpeed, _weapon.damage, _weapon.bulletLifeTime);
+		_animator.SetTrigger(Shoot);
 	}
 	
-	private void OnDisable() => inventory.EquippedChanged -= OnEquippedChanged;
+	private void OnDisable() => _inventory.EquippedChanged -= OnEquippedChanged;
 }

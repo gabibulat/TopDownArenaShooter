@@ -6,9 +6,9 @@ public class WeaponInventory : MonoBehaviour
 {
 	[SerializeField] private WeaponData startingWeapon;
 	[SerializeField] private int startingReserveAmmo;
+	
 	private readonly Dictionary<WeaponData, WeaponState> _states = new();
 	private readonly List<WeaponData> _owned = new();
-
 	private WeaponData _currentWeapon;
 	private WeaponState _currentState;
 
@@ -63,23 +63,25 @@ public class WeaponInventory : MonoBehaviour
 		AmmoChanged?.Invoke(_currentState.ammoInMag, _currentState.ammoReserve); 
 	}
 
-	public void AddAmmo(WeaponData weapon, int amount)
+	public bool AddAmmo(WeaponData weapon, int amount)
 	{
-		if (weapon == null || amount <= 0) return;
+		if (amount <= 0) return false;
 
 		if (!_states.TryGetValue(weapon, out var state))
 		{
-			if (!HasWeapon(weapon)) return;
+			if (!HasWeapon(weapon)) return false;
 			AddWeapon(weapon, 0, autoEquip: false);
 			state = _states[weapon];
 		}
 
+		if (state.ammoReserve == weapon.maxReserveAmmo) return false;
 		state.ammoReserve = Mathf.Clamp(state.ammoReserve + amount, 0, weapon.maxReserveAmmo);
 
 		if (weapon == _currentWeapon)
 		{
 			AmmoChanged?.Invoke(_currentState.ammoInMag, _currentState.ammoReserve); 
 		}
+		return true;
 	}
 	
 	public bool TryConsumeFromCurrent(int amount = 1)

@@ -8,15 +8,8 @@ public class PlayerInputHandler : MonoBehaviour
 
 	private void Awake()
 	{
-		if (_playerController == null)
-		{
-			_playerController = GetComponent<PlayerController>();
-		}
-
-		if (_playerCombat == null)
-		{
-			_playerCombat = GetComponent<PlayerCombat>();
-		}
+		_playerController = GetComponent<PlayerController>();
+		_playerCombat = GetComponent<PlayerCombat>();
 	}
 
 	private void OnMove(InputValue value)

@@ -1,21 +1,25 @@
+using System;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-	[SerializeField] private float moveSpeed = 5f;
-
 	[SerializeField] private Camera mainCamera;
+	[SerializeField] private float moveSpeed = 5f;
 	[SerializeField] private float rotationSpeed = 20f;
 
+	private Animator _animator;
 	private CharacterController _controller;
 	private Vector2 _moveInput;
 	private Vector2 _aimInput;
 	private bool _hasMoveInput;
 
+	private static readonly int MoveAnim = Animator.StringToHash("Move");
+
 	public Vector3 AimDirection { get; private set; } = Vector3.forward;
 
 	private void Awake()
 	{
+		_animator = GetComponent<Animator>();
 		_controller = GetComponent<CharacterController>();
 		if (mainCamera == null)
 		{
@@ -41,6 +45,10 @@ public class PlayerController : MonoBehaviour
 		{
 			Move();
 		}
+		else
+		{
+			_animator.SetBool(MoveAnim, false);
+		}
 	}
 
 	private void Move()
@@ -52,6 +60,7 @@ public class PlayerController : MonoBehaviour
 		}
 
 		_controller.Move(move * (moveSpeed * Time.deltaTime));
+		_animator.SetBool(MoveAnim, true);
 	}
 
 	private void Aim()
