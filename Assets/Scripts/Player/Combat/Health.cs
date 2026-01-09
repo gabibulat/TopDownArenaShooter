@@ -17,6 +17,12 @@ public sealed class Health : MonoBehaviour, IDamageable
 
 	private void Start()
 	{
+		SetMaxHealth(max);
+	}
+
+	public void SetMaxHealth(int maxhp)
+	{
+		max = maxhp;
 		_current = max;
 		Changed?.Invoke(_current, max);
 	}
