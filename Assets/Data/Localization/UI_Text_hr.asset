@@ -1,0 +1,51 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9620f8c34305754d8cc9a7e49e852d9, type: 3}
+  m_Name: UI_Text_hr
+  m_EditorClassIdentifier: Unity.Localization::UnityEngine.Localization.Tables.StringTable
+  m_LocaleId:
+    m_Code: hr
+  m_SharedData: {fileID: 11400000, guid: 4cfb98d887e62e0438ccacd5e7224f10, type: 2}
+  m_Metadata:
+    m_Items: []
+  m_TableData:
+  - m_Id: 264751902720
+    m_Localized: Nova Igra
+    m_Metadata:
+      m_Items: []
+  - m_Id: 334415097856
+    m_Localized: Postavke
+    m_Metadata:
+      m_Items: []
+  - m_Id: 467269677056
+    m_Localized: Izlaz
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4846416654336
+    m_Localized: Odabir Razine
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11624810377216
+    m_Localized: Jezik
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11689314578432
+    m_Localized: Engleski
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11761880231936
+    m_Localized: Hrvatski
+    m_Metadata:
+      m_Items: []
+  references:
+    version: 2
+    RefIds: []
