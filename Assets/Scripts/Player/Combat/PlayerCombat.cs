@@ -16,14 +16,13 @@ public class PlayerCombat : MonoBehaviour
 
 	private WeaponData _weapon;
 	private static readonly int Shoot = Animator.StringToHash("Shoot");
-	
-	private void OnEnable()  => _inventory.EquippedChanged += OnEquippedChanged;
 
 	private void Awake()
 	{
 		_animator = GetComponent<Animator>();
 		_playerController = GetComponent<PlayerController>();
-		_inventory = GetComponent<WeaponInventory>();
+		_inventory = GetComponent<WeaponInventory>(); 
+		_inventory.EquippedChanged += OnEquippedChanged;
 	}
 
 	private void OnEquippedChanged(WeaponData weaponData)
@@ -90,6 +89,6 @@ public class PlayerCombat : MonoBehaviour
 		bullet.Launch(muzzlePoint.position, dir, _weapon.bulletSpeed, _weapon.damage, _weapon.bulletLifeTime);
 		_animator.SetTrigger(Shoot);
 	}
-	
-	private void OnDisable() => _inventory.EquippedChanged -= OnEquippedChanged;
+
+	private void OnDisable()=> _inventory.EquippedChanged -= OnEquippedChanged;
 }

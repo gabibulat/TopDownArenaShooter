@@ -1,6 +1,8 @@
+using System;
 using System.Collections;
 using UnityEngine;
- using UnityEngine.AI;
+using UnityEngine.AddressableAssets;
+using UnityEngine.AI;
 
 public sealed class EnemyBehaviour : MonoBehaviour
 {
@@ -23,24 +25,31 @@ public sealed class EnemyBehaviour : MonoBehaviour
 	private float _attackCooldown;
 	private float _attackRange;
 	private float _chaseSpeed;
-	
+
+	private Action _onReleasedAfterDeath;
+
 	private static readonly int Move = Animator.StringToHash("Move");
 	private static readonly int Attack = Animator.StringToHash("Attack");
 	private static readonly int Die = Animator.StringToHash("Die");
-
-	//DEBUG
-	[SerializeField] private EnemyData enemyData;
-
-	public void Initialize(EnemyData data)
+	
+	public void InitializeFromSpawner(EnemyData data, Transform target, float healthMul, float damageMul,
+		float speedMul, System.Action onReleasedAfterDeath)
 	{
-		_agent.speed = data.chaseSpeed;
-		_chaseSpeed = data.chaseSpeed;
+		_target = target;
+		_onReleasedAfterDeath = onReleasedAfterDeath;
+
+		var scaledSpeed = data.chaseSpeed * speedMul;
+		_chaseSpeed = scaledSpeed;
+		_agent.speed = scaledSpeed;
+
 		_agent.stoppingDistance = data.attackRange;
 		_attackRange = data.attackRange;
 		_detectionRange = data.detectionRange;
-		_damage = data.damage;
 		_attackCooldown = data.attackCooldown;
-		_health.SetMaxHealth(enemyData.maxHealth);
+		_damage = Mathf.RoundToInt(data.damage * damageMul);
+
+		var hp = Mathf.RoundToInt(data.maxHealth * healthMul);
+		_health.SetMaxHealth(hp);
 	}
 
 	private void Awake()
@@ -49,12 +58,10 @@ public sealed class EnemyBehaviour : MonoBehaviour
 		_health = GetComponent<Health>();
 		_collider = GetComponent<Collider>();
 		_animator = GetComponent<Animator>();
+
 		var player = GameObject.FindGameObjectWithTag("Player");
 		if (player) _target = player.transform;
 		_agent.autoBraking = true;
-
-		//DEBUG
-		Initialize(enemyData);
 	}
 
 	private void OnEnable()
@@ -107,8 +114,9 @@ public sealed class EnemyBehaviour : MonoBehaviour
 		if (_target.TryGetComponent<IDamageable>(out var damageable))
 		{
 			damageable.TakeDamage(_damage);
-			_animator.SetTrigger(Attack);
 		}
+
+		_animator.SetTrigger(Attack);
 	}
 
 	private void FaceTarget()
@@ -141,6 +149,7 @@ public sealed class EnemyBehaviour : MonoBehaviour
 
 	private void OnDied()
 	{
+		if (_dead) return;
 		_dead = true;
 
 		if (_agent.enabled)
@@ -149,18 +158,20 @@ public sealed class EnemyBehaviour : MonoBehaviour
 			_agent.ResetPath();
 			_agent.enabled = false;
 		}
+
 		_collider.enabled = false;
 
 		_animator.SetTrigger(Die);
+
 		StartCoroutine(ReleaseAfterDelay());
 	}
 
 	private IEnumerator ReleaseAfterDelay()
 	{
 		yield return new WaitForSeconds(destroyDelay);
-		//Addressables.ReleaseInstance(gameObject);
-		//DEBUG
-		Destroy(gameObject);
+		_onReleasedAfterDeath?.Invoke();
+		_onReleasedAfterDeath = null;
+		Addressables.ReleaseInstance(gameObject);
 	}
 
 	private void OnDisable()
@@ -168,7 +179,6 @@ public sealed class EnemyBehaviour : MonoBehaviour
 		_health.Died -= OnDied;
 	}
 
-	// DEBUG 
 	private void OnDrawGizmosSelected()
 	{
 		Gizmos.color = Color.yellow;

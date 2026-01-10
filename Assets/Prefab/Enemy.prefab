@@ -804,7 +804,6 @@ GameObject:
   - component: {fileID: 5673611258673871854}
   - component: {fileID: 3206173450863833372}
   - component: {fileID: 1164829913189167490}
-  - component: {fileID: 3975430627203291391}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Enemy
@@ -909,16 +908,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c59375fb86630734f8c648369f7b3cb0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyBehaviour
-  animator: {fileID: 2901368062773992676}
-  aggroRange: 10.06
-  attackRange: 2
-  damage: 10
-  attackCooldown: 1
-  chaseSpeed: 3.5
   destinationUpdateRate: 0.15
   faceTargetSpeed: 12
   destroyDelay: 2
-  disableColliderOnDeath: 1
 --- !u!114 &1164829913189167490
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -932,20 +924,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Health
   max: 100
---- !u!114 &3975430627203291391
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4832729136354662019}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 613809d9b7dc110489f6d7c1e3b44c17, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::HealthBar
-  fill: {fileID: 0}
-  health: {fileID: 0}
 --- !u!1 &5208372118234838569
 GameObject:
   m_ObjectHideFlags: 0
@@ -1720,7 +1698,7 @@ Canvas:
   m_AdditionalShaderChannelsFlag: 0
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 2
   m_TargetDisplay: 0
 --- !u!114 &1630032047771016121
 MonoBehaviour:
