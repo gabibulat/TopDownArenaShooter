@@ -348,6 +348,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4925882820810153782}
+  - component: {fileID: 3032287919948741305}
   m_Layer: 5
   m_Name: HUD
   m_TagString: Untagged
@@ -377,6 +378,35 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &3032287919948741305
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5619449537045533623}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0bd10f0d312951e4d8b92ca4e2448b26, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HUD
+  weaponIcon: {fileID: 7785000059169802567}
+  ammoText: {fileID: 9191185184816228420}
+  levelText: {fileID: 6562416253015935974}
+  levelLabel:
+    m_TableReference:
+      m_TableCollectionName: GUID:4cfb98d887e62e0438ccacd5e7224f10
+    m_TableEntryReference:
+      m_KeyId: 27648939094016
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  weaponInventory: {fileID: 0}
+  gameController: {fileID: 0}
+  references:
+    version: 2
+    RefIds: []
 --- !u!1 &6743029027034496920
 GameObject:
   m_ObjectHideFlags: 0

@@ -19,7 +19,7 @@ MonoBehaviour:
     m_SubObjectGUID: 
     m_EditorAssetChanged: 0
   maxHealth: 50
-  detectionRange: 10
+  detectionRange: 15
   attackRange: 2
   damage: 10
   attackCooldown: 1

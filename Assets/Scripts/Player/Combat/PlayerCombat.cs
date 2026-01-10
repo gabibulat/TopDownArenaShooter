@@ -6,22 +6,27 @@ public class PlayerCombat : MonoBehaviour
 	[SerializeField] private Transform muzzlePoint;
 
 	private Animator _animator;
-	private PlayerController _playerController; 
+	private PlayerController _playerController;
 	private WeaponInventory _inventory;
-	
+	private WeaponData _weapon;
+	private LineRenderer _lineRenderer;
+
 	private bool _triggerHeld;
 	private bool _isReloading;
 	private float _nextFireTime;
 	private float _reloadEndTime;
-
-	private WeaponData _weapon;
+	
 	private static readonly int Shoot = Animator.StringToHash("Shoot");
 
 	private void Awake()
 	{
 		_animator = GetComponent<Animator>();
 		_playerController = GetComponent<PlayerController>();
-		_inventory = GetComponent<WeaponInventory>(); 
+		_inventory = GetComponent<WeaponInventory>();
+		_lineRenderer = GetComponent<LineRenderer>();
+		_inventory.EquippedChanged += OnEquippedChanged;
+		_lineRenderer.positionCount = 2;
+
 		_inventory.EquippedChanged += OnEquippedChanged;
 	}
 
@@ -36,6 +41,8 @@ public class PlayerCombat : MonoBehaviour
 
 	private void Update()
 	{
+		AimLineUpdate();
+
 		if (!_triggerHeld && !_isReloading) return;
 
 		if (_isReloading)
@@ -51,19 +58,32 @@ public class PlayerCombat : MonoBehaviour
 		}
 	}
 
+	private void AimLineUpdate()
+	{
+		var aim = _playerController.AimDirection;
+		if (!(aim.sqrMagnitude > 0.0001f)) return;
+		aim.y = 0f;
+		var start = muzzlePoint.position;
+		const int maxDistance = 20;
+		var end = start + aim.normalized * maxDistance;
+		if (Physics.Raycast(start, aim.normalized, out var hit, maxDistance)) end = hit.point;
+		_lineRenderer.SetPosition(0, start);
+		_lineRenderer.SetPosition(1, end);
+	}
+
 	private void TryFire()
 	{
 		if (Time.time < _nextFireTime) return;
-		
+
 		if (!_inventory.TryConsumeFromCurrent(1))
 		{
 			TryReload();
 			return;
 		}
-		
+
 		_nextFireTime = Time.time + (1f / _weapon.fireRate);
 		FireBullet();
-		
+
 		if (!_inventory.TryConsumeFromCurrent(0))
 		{
 			TryReload();
@@ -90,5 +110,5 @@ public class PlayerCombat : MonoBehaviour
 		_animator.SetTrigger(Shoot);
 	}
 
-	private void OnDisable()=> _inventory.EquippedChanged -= OnEquippedChanged;
+	private void OnDisable() => _inventory.EquippedChanged -= OnEquippedChanged;
 }
