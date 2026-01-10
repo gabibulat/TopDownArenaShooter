@@ -1,36 +1,74 @@
+using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Localization;
+using UnityEngine.Localization.Settings;
 using UnityEngine.UI;
 
 public class HUD : MonoBehaviour
 {
-	[SerializeField] private Image _weaponIcon;
-	[SerializeField] private TMP_Text _ammoText;
-	[SerializeField] private WeaponInventory _weaponInventory;
+	[SerializeField] private Image weaponIcon;
+	[SerializeField] private TMP_Text ammoText;
+	[SerializeField] private TMP_Text levelText;
+	[SerializeField] private LocalizedString levelLabel;
+	[SerializeField] private WeaponInventory weaponInventory;
+	[SerializeField] private GameController gameController;
+	private int _lastLevelNumber;
+	private static HUD _instance;
 
-	public static HUD Instance { get; private set; }
+	private void OnEnable()
+	{
+		weaponInventory.AmmoChanged += AmmoUpdate;
+		weaponInventory.EquippedChanged += WeaponUpdate;
+		gameController.NewLevel += LevelUpdate;
+		LocalizationSettings.SelectedLocaleChanged += OnLocaleChanged;
+	}
 
 	private void Awake()
 	{
-		if (Instance && !Equals(Instance, this))
+		if (_instance && !Equals(_instance, this))
 		{
 			Destroy(gameObject);
 			return;
 		}
 
-		Instance = this;
-		
-		_weaponInventory.AmmoChanged += AmmoUpdate;
-		_weaponInventory.EquippedChanged += WeaponUpdate;
+		_instance = this;
+	}
+
+	private async void OnLocaleChanged(Locale _)
+	{
+		await UpdateLevelTextAsync(_lastLevelNumber);
+	}
+
+	private void LevelUpdate(int levelNumber)
+	{
+		_lastLevelNumber = levelNumber;
+		_ = UpdateLevelTextAsync(levelNumber);
+	}
+
+	private async Task UpdateLevelTextAsync(int levelNumber)
+	{
+		levelLabel.Arguments = new object[] { levelNumber };
+		var op = levelLabel.GetLocalizedStringAsync();
+		await op.Task;
+		levelText.text = op.Result;
 	}
 
 	private void WeaponUpdate(WeaponData weaponData)
 	{
-		_weaponIcon.sprite = weaponData.icon;
+		weaponIcon.sprite = weaponData.icon;
 	}
 
 	private void AmmoUpdate(int ammoInMag, int ammoReserve)
 	{
-		_ammoText.text = $"{ammoInMag}/{ammoReserve}";
+		ammoText.text = $"{ammoInMag}/{ammoReserve}";
+	}
+
+	private void OnDisable()
+	{
+		weaponInventory.AmmoChanged -= AmmoUpdate;
+		weaponInventory.EquippedChanged -= WeaponUpdate;
+		gameController.NewLevel -= LevelUpdate;
+		LocalizationSettings.SelectedLocaleChanged -= OnLocaleChanged;
 	}
 }

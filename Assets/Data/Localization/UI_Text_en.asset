@@ -46,6 +46,30 @@ MonoBehaviour:
     m_Localized: Croatian
     m_Metadata:
       m_Items: []
+  - m_Id: 19971827658752
+    m_Localized: Resume
+    m_Metadata:
+      m_Items: []
+  - m_Id: 20018967441408
+    m_Localized: Main Menu
+    m_Metadata:
+      m_Items: []
+  - m_Id: 25022679838720
+    m_Localized: Restart
+    m_Metadata:
+      m_Items: []
+  - m_Id: 25720528138240
+    m_Localized: Game Over
+    m_Metadata:
+      m_Items: []
+  - m_Id: 25855744110592
+    m_Localized: Victory!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 27648939094016
+    m_Localized: Level {0}
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

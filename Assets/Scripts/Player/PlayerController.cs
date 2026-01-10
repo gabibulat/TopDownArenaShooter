@@ -20,7 +20,8 @@ public class PlayerController : MonoBehaviour
 	private static readonly int Died = Animator.StringToHash("Die");
 
 	public Vector3 AimDirection { get; private set; } = Vector3.forward;
-
+	public Action PlayerDied;
+	
 	private void Awake()
 	{
 		_health = GetComponent<Health>();
@@ -94,7 +95,7 @@ public class PlayerController : MonoBehaviour
 		
 	private void Die()
 	{
-		//call gameOver
+		PlayerDied?.Invoke();
 		_animator.SetTrigger(Died);
 		_playerInput.enabled = false;
 	}

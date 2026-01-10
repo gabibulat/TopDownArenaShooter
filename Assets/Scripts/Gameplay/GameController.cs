@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -12,8 +13,11 @@ public sealed class GameController : MonoBehaviour
 
 	private int _alive;
 	private Queue<EnemyData> _queue;
+	private const float DelayLevels = 2f;
 
 	private float _healthMul = 1f, _damageMul = 1f, _speedMul = 1f;
+	public Action<int> NewLevel;
+	public Action Won;
 
 	private void Awake()
 	{
@@ -32,6 +36,7 @@ public sealed class GameController : MonoBehaviour
 	private IEnumerator RunLevel(LevelData level)
 	{
 		if (_entryPoints.Count == 0) yield break;
+		NewLevel?.Invoke(level.levelNumber);
 
 		_alive = 0;
 		BuildQueue(level);
@@ -41,14 +46,11 @@ public sealed class GameController : MonoBehaviour
 
 		while (_queue.Count > 0)
 		{
-			while (level.maxAlive > 0 && _alive >= level.maxAlive)
-				yield return null;
+			while (level.maxAlive > 0 && _alive >= level.maxAlive) yield return null;
 
 			for (int i = 0; i < level.spawnStep && _queue.Count > 0; i++)
 			{
-				while (level.maxAlive > 0 && _alive >= level.maxAlive)
-					yield return null;
-
+				while (level.maxAlive > 0 && _alive >= level.maxAlive) yield return null;
 				var enemy = _queue.Dequeue();
 				var ep = _entryPoints[epIndex].transform;
 				epIndex = (epIndex + 1) % _entryPoints.Count;
@@ -59,7 +61,9 @@ public sealed class GameController : MonoBehaviour
 		}
 
 		while (_alive > 0) yield return null;
-		LevelLoader.Instance.LoadNextLevel();
+		yield return new WaitForSeconds(DelayLevels);
+
+		if (!LevelLoader.Instance.LoadNextLevel()) Won?.Invoke();
 	}
 
 	private void BuildQueue(LevelData level)

@@ -10,6 +10,7 @@ public sealed class LevelLoader : MonoBehaviour
 {
 	public static LevelLoader Instance { get; private set; }
 	[SerializeField] private LevelCatalog catalog;
+	[SerializeField] private AssetReference mainMenuScene;
 	
 	private AsyncOperationHandle<LevelData>? _levelHandle;
 	private LevelData _currentLevelData;
@@ -18,6 +19,7 @@ public sealed class LevelLoader : MonoBehaviour
 	private AsyncOperationHandle<SceneInstance>? _sceneHandle;
 
 	public event Action<LevelData> LevelReady;
+	
 	private void Awake()
 	{
 		if (Instance && Instance != this)
@@ -35,16 +37,13 @@ public sealed class LevelLoader : MonoBehaviour
 		_ = LoadLevelInternal(catalog.Clamp(index));
 	}
 
-	public void LoadNextLevel()
+	public bool LoadNextLevel()
 	{
-		if (!catalog || catalog.Count == 0) return;
+		if (!catalog || catalog.Count == 0) return false;
 		var next = _currentIndex + 1;
-		if (next >= catalog.Count)
-		{
-			//Won the game
-			return;
-		}
+		if (next >= catalog.Count) return false;
 		_ = LoadLevelInternal(next);
+		return true;
 	}
 
 	private async Task LoadLevelInternal(int index)
@@ -71,12 +70,9 @@ public sealed class LevelLoader : MonoBehaviour
 	
 	private void ReleaseCurrentLevelData()
 	{
-		if (_levelHandle.HasValue)
-		{
-			Addressables.Release(_levelHandle.Value);
-			_levelHandle = null;
-		}
-		_currentLevelData = null;
+		if (!_levelHandle.HasValue) return;
+		Addressables.Release(_levelHandle.Value);
+		_levelHandle = null;
 	}
 
 	private async Task<LevelData> LoadLevelData(AssetReferenceT<LevelData> levelRef)
@@ -97,9 +93,29 @@ public sealed class LevelLoader : MonoBehaviour
 			SceneManager.SetActiveScene(_sceneHandle.Value.Result.Scene);
 		}
 	}
+	
+	public void LoadMainMenu()
+	{
+		if (mainMenuScene == null) return;
+		_ = LoadMainMenuInternal();
+	}
+
+	private async Task LoadMainMenuInternal()
+	{
+		ReleaseCurrentLevelData();
+		var menuKey = mainMenuScene.RuntimeKey.ToString();
+		if (!string.IsNullOrEmpty(_currentSceneKey) && _currentSceneKey == menuKey) return;
+		_currentIndex = -1;
+		_currentLevelData = null;
+		await LoadSceneSingle(mainMenuScene);
+		_currentSceneKey = menuKey;
+	}
 
 	private void OnDestroy()
 	{
 		ReleaseCurrentLevelData();
+
+		if (Instance == this)
+			Instance = null;
 	}
 }

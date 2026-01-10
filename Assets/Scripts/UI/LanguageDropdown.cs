@@ -17,23 +17,7 @@ public class LanguageDropdown : MonoBehaviour
 
 	private Locale _en;
 	private Locale _hr;
-	private void Awake()
-	{
-		StartCoroutine(ApplySavedLocale());
-	}
 
-	private IEnumerator ApplySavedLocale()
-	{
-		yield return LocalizationSettings.InitializationOperation;
-
-		if (PlayerPrefs.HasKey(PlayerPrefsKey))
-		{
-			var code = PlayerPrefs.GetString(PlayerPrefsKey);
-			var locale = LocalizationSettings.AvailableLocales.GetLocale(code);
-			if (locale) LocalizationSettings.SelectedLocale = locale;
-		}
-	}
-	
 	private IEnumerator Start()
 	{
 		yield return LocalizationSettings.InitializationOperation;
