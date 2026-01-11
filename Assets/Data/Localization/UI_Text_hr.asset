@@ -70,6 +70,18 @@ MonoBehaviour:
     m_Localized: Razina {0}
     m_Metadata:
       m_Items: []
+  - m_Id: 74449285115904
+    m_Localized: "Glasno\u0107a"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 74523910172672
+    m_Localized: "Glasno\u0107a Glazbe"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 74589748162560
+    m_Localized: "Glasno\u0107a efekata"
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

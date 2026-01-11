@@ -70,6 +70,18 @@ MonoBehaviour:
     m_Localized: Level {0}
     m_Metadata:
       m_Items: []
+  - m_Id: 74449285115904
+    m_Localized: Master volume
+    m_Metadata:
+      m_Items: []
+  - m_Id: 74523910172672
+    m_Localized: Music volume
+    m_Metadata:
+      m_Items: []
+  - m_Id: 74589748162560
+    m_Localized: Sfx volume
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

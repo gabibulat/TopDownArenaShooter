@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: Sounds
+  m_EditorClassIdentifier: Unity.Addressables.Editor::UnityEditor.AddressableAssets.Settings.AddressableAssetGroup
+  m_GroupName: Sounds
+  m_GUID: 49ea40f565f2afe4b9955f6fccc7a97d
+  m_SerializeEntries:
+  - m_GUID: 3743191223aa7884aa5f127d9f41d978
+    m_Address: Assets/Audio/Battle Music Pack DEMO/Battle Theme 3_demo.wav
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a78303900de031545bfe54fdf32f9c69
+    m_Address: Assets/Audio/Battle Music Pack DEMO/Battle Theme 5_demo.wav
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: d451b0781f8b99b40bbbbd8a18c6a7d8, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: ef3f5813768229b4f885fe704ea4dfe0, type: 2}
+    - {fileID: 11400000, guid: 3b7b80b91d9021f48818e1657ca757cd, type: 2}

@@ -67,6 +67,18 @@ MonoBehaviour:
     m_Key: level_label
     m_Metadata:
       m_Items: []
+  - m_Id: 74449285115904
+    m_Key: volume_master
+    m_Metadata:
+      m_Items: []
+  - m_Id: 74523910172672
+    m_Key: volume_music
+    m_Metadata:
+      m_Items: []
+  - m_Id: 74589748162560
+    m_Key: volume_sfx
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

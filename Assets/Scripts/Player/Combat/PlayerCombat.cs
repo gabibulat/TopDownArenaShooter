@@ -4,7 +4,8 @@ using UnityEngine;
 public class PlayerCombat : MonoBehaviour
 {
 	[SerializeField] private Transform muzzlePoint;
-
+	[SerializeField] private AudioSource gunAudioSource;
+	
 	private Animator _animator;
 	private PlayerController _playerController;
 	private WeaponInventory _inventory;
@@ -15,7 +16,7 @@ public class PlayerCombat : MonoBehaviour
 	private bool _isReloading;
 	private float _nextFireTime;
 	private float _reloadEndTime;
-	
+
 	private static readonly int Shoot = Animator.StringToHash("Shoot");
 
 	private void Awake()
@@ -106,6 +107,7 @@ public class PlayerCombat : MonoBehaviour
 			: transform.forward;
 
 		var bullet = BulletPool.Instance.Get();
+		gunAudioSource.PlayOneShot(gunAudioSource.clip);
 		bullet.Launch(muzzlePoint.position, dir, _weapon.bulletSpeed, _weapon.damage, _weapon.bulletLifeTime);
 		_animator.SetTrigger(Shoot);
 	}

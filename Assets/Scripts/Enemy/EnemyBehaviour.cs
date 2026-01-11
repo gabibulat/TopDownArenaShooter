@@ -9,7 +9,8 @@ public sealed class EnemyBehaviour : MonoBehaviour
 	[SerializeField] private float destinationUpdateRate = 0.15f;
 	[SerializeField] private float faceTargetSpeed = 12f;
 	[SerializeField] private float destroyDelay = 2f;
-
+	[SerializeField] private AudioSource attackAudioSource;
+	
 	private Transform _target;
 	private NavMeshAgent _agent;
 	private Health _health;
@@ -113,9 +114,10 @@ public sealed class EnemyBehaviour : MonoBehaviour
 		_nextAttackTime = Time.time + _attackCooldown;
 		if (_target.TryGetComponent<IDamageable>(out var damageable))
 		{
+			attackAudioSource.PlayOneShot(attackAudioSource.clip);
 			damageable.TakeDamage(_damage);
 		}
-
+		
 		_animator.SetTrigger(Attack);
 	}
 
