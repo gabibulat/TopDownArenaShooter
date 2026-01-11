@@ -1,7 +1,7 @@
 # TopDownArenaShooter
 - New player input used
 
-PLAYER
+-Player
 -player movement done with CharacterController - PlayerController
 -PlayerCombat
 	- has auto reload when magazine empty
