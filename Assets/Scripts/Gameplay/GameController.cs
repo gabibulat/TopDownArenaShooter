@@ -14,6 +14,7 @@ public sealed class GameController : MonoBehaviour
 	private int _alive;
 	private Queue<EnemyData> _queue;
 	private const float DelayLevels = 2f;
+	private LevelLoader _loader;
 
 	private float _healthMul = 1f, _damageMul = 1f, _speedMul = 1f;
 	public Action<int> NewLevel;
@@ -25,7 +26,11 @@ public sealed class GameController : MonoBehaviour
 		_entryPoints.Sort((a, b) => string.CompareOrdinal(a.name, b.name));
 	}
 
-	private void OnEnable() => LevelLoader.Instance.LevelReady += OnLevelReady;
+	private void OnEnable()
+	{
+		_loader = LevelLoader.Instance;
+		if (_loader) _loader.LevelReady += OnLevelReady;
+	}
 
 	private void OnLevelReady(LevelData level)
 	{
@@ -111,5 +116,9 @@ public sealed class GameController : MonoBehaviour
 		);
 	}
 
-	private void OnDisable() => LevelLoader.Instance.LevelReady -= OnLevelReady;
+	private void OnDisable()
+	{
+		if (_loader) _loader.LevelReady -= OnLevelReady;
+		_loader = null;
+	}
 }

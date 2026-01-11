@@ -18,9 +18,10 @@ MonoBehaviour:
     m_SubObjectType: 
     m_SubObjectGUID: 
     m_EditorAssetChanged: 0
-  maxHealth: 50
+  dropChance: 0.5
+  maxHealth: 30
   detectionRange: 15
   attackRange: 2
-  damage: 10
+  damage: 5
   attackCooldown: 1
   chaseSpeed: 3.5

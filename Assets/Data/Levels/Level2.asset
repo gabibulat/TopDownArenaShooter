@@ -21,9 +21,9 @@ MonoBehaviour:
     m_EditorAssetChanged: 0
   spawnRate: 1
   spawnStep: 2
-  maxAlive: 2
+  maxAlive: 5
   enemies:
   - enemy: {fileID: 11400000, guid: 8ac12ba203472ca498df550079783b07, type: 2}
-    count: 2
+    count: 10
   difficultyProfile: {fileID: 11400000, guid: dd93ca9b81862dd41aff56358a8e7298, type: 2}
   difficultyMaxLevel: 10

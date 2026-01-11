@@ -16,16 +16,13 @@ public sealed class EnemyBehaviour : MonoBehaviour
 	private Health _health;
 	private Collider _collider;
 	private Animator _animator;
-
+	private EnemyData _data;
+	private DropSpawner _dropSpawner;
+	
 	private float _nextDestinationTime;
 	private float _nextAttackTime;
 	private bool _dead;
-
-	private float _detectionRange;
 	private int _damage;
-	private float _attackCooldown;
-	private float _attackRange;
-	private float _chaseSpeed;
 
 	private Action _onReleasedAfterDeath;
 
@@ -34,21 +31,15 @@ public sealed class EnemyBehaviour : MonoBehaviour
 	private static readonly int Die = Animator.StringToHash("Die");
 	
 	public void InitializeFromSpawner(EnemyData data, Transform target, float healthMul, float damageMul,
-		float speedMul, System.Action onReleasedAfterDeath)
+		float speedMul, Action onReleasedAfterDeath)
 	{
+		_data = data;
 		_target = target;
 		_onReleasedAfterDeath = onReleasedAfterDeath;
-
 		var scaledSpeed = data.chaseSpeed * speedMul;
-		_chaseSpeed = scaledSpeed;
 		_agent.speed = scaledSpeed;
-
 		_agent.stoppingDistance = data.attackRange;
-		_attackRange = data.attackRange;
-		_detectionRange = data.detectionRange;
-		_attackCooldown = data.attackCooldown;
 		_damage = Mathf.RoundToInt(data.damage * damageMul);
-
 		var hp = Mathf.RoundToInt(data.maxHealth * healthMul);
 		_health.SetMaxHealth(hp);
 	}
@@ -59,7 +50,8 @@ public sealed class EnemyBehaviour : MonoBehaviour
 		_health = GetComponent<Health>();
 		_collider = GetComponent<Collider>();
 		_animator = GetComponent<Animator>();
-
+		_dropSpawner = FindAnyObjectByType<DropSpawner>();
+		
 		var player = GameObject.FindGameObjectWithTag("Player");
 		if (player) _target = player.transform;
 		_agent.autoBraking = true;
@@ -78,13 +70,13 @@ public sealed class EnemyBehaviour : MonoBehaviour
 
 		var dist = Vector3.Distance(transform.position, _target.position);
 
-		if (dist > _detectionRange)
+		if (dist > _data.detectionRange)
 		{
 			StopAgent();
 			return;
 		}
 
-		if (dist <= _attackRange)
+		if (dist <= _data.attackRange)
 		{
 			StopAgent();
 			FaceTarget();
@@ -111,7 +103,7 @@ public sealed class EnemyBehaviour : MonoBehaviour
 	private void TryAttack()
 	{
 		if (Time.time < _nextAttackTime) return;
-		_nextAttackTime = Time.time + _attackCooldown;
+		_nextAttackTime = Time.time + _data.attackCooldown;
 		if (_target.TryGetComponent<IDamageable>(out var damageable))
 		{
 			attackAudioSource.PlayOneShot(attackAudioSource.clip);
@@ -146,7 +138,7 @@ public sealed class EnemyBehaviour : MonoBehaviour
 		if (!_agent.isStopped) return;
 
 		_agent.isStopped = false;
-		_agent.speed = _chaseSpeed;
+		_agent.speed = _data.chaseSpeed;
 	}
 
 	private void OnDied()
@@ -164,7 +156,8 @@ public sealed class EnemyBehaviour : MonoBehaviour
 		_collider.enabled = false;
 
 		_animator.SetTrigger(Die);
-
+		
+		_dropSpawner.TryDrop(_data.dropChance, transform.position);
 		StartCoroutine(ReleaseAfterDelay());
 	}
 

@@ -488,7 +488,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WeaponInventory
   startingWeapon: {fileID: 11400000, guid: 3bbf32c22e5344f41a449b578477947f, type: 2}
-  startingReserveAmmo: 20
+  startingReserveAmmo: 40
 --- !u!114 &2183058489729362773
 MonoBehaviour:
   m_ObjectHideFlags: 0

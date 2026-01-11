@@ -39,7 +39,7 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   damageStart: 1
-  damageEnd: 1.5
+  damageEnd: 2
   damageCurve:
     serializedVersion: 2
     m_Curve:

@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 
 public class PlayerPickupInteraction : MonoBehaviour
 {
@@ -18,7 +19,7 @@ public class PlayerPickupInteraction : MonoBehaviour
 
 		if (Apply(pickup.Data))
 		{
-			Destroy(other.gameObject);
+			Addressables.ReleaseInstance(other.gameObject);
 		}
 	}
 
