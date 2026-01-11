@@ -1,13 +1,15 @@
 # TopDownArenaShooter
+~30h of effective work
+
 - New player input used
 
 Player
--player movement done with CharacterController - PlayerController
--PlayerCombat
+- player movement done with CharacterController - PlayerController
+- PlayerCombat
 	- has auto reload when magazine empty
 	- shooting bullets from bullet pool
 	- has basic lineRenderer to help show aim
--Weapons
+- Weapons
 	- each weapon can be defined in WeaponData
 	- in WeaponInventory owned weapons and their WeaponState (ammo in magazine and ammo in reserve) are stored and managed.
 	- there is logic for equipping and adding weapon, but for this demo theres only one defined gun and no collectable weapons or input for switching, just left it scalable
